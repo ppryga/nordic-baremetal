@@ -1,0 +1,13 @@
+# ninja log v5
+2	438	1690200146453476253	CMakeFiles/_tests.dir/slist_test.cpp.o	477c754dfd7a5cfe
+2	41	1690200244340146846	build.ninja	877e69c45df47f6f
+0	46	1690045997636677081	CMakeFiles/_tests.dir/slist_test.c.o	aa4c05b3bb945af3
+9	420	1690199734780126408	CMakeFiles/_tests.dir/test_main.cpp.o	94598a54f3c75989
+10	129	1690199734490126396	CMakeFiles/_tests.dir/home/piotr/nordic-baremetal-workspace/hello_world/tools/slist.c.o	4c6dd2bd59ec3dd6
+438	2416	1690200148426809665	_tests	f006259acfbe2e0f
+9	173	1690200246933480283	CMakeFiles/_tests.dir/home/piotr/nordic-baremetal-workspace/hello_world/tools/slist.c.o	3cae9d21ae204e82
+7	409	1690200247170146960	CMakeFiles/_tests.dir/test_main.cpp.o	b063b50066e7c8
+8	707	1690200247466813638	CMakeFiles/_tests.dir/slist_test.cpp.o	ab6fc90cb2975ff2
+707	2553	1690200249310147045	_tests	31c579ee75e3e68b
+9	655	1690202270283561384	CMakeFiles/_tests.dir/slist_test.cpp.o	ab6fc90cb2975ff2
+655	2734	1690202272356894800	_tests	31c579ee75e3e68b

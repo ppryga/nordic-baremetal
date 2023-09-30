@@ -1,0 +1,3 @@
+/home/piotr/nordic-baremetal-workspace/hello_world/build-test/CMakeFiles/_tests.dir
+/home/piotr/nordic-baremetal-workspace/hello_world/build-test/CMakeFiles/edit_cache.dir
+/home/piotr/nordic-baremetal-workspace/hello_world/build-test/CMakeFiles/rebuild_cache.dir

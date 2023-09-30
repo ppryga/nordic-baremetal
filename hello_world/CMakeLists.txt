@@ -1,3 +1,9 @@
+#
+# Copyright (c) 2023 Piotr Pryga
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
 cmake_minimum_required(VERSION 3.15.3)
 
 # Optional: print out extra messages to see what is going on. Comment it to have less verbose messages
@@ -5,10 +11,10 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # Path to toolchain file. This one has to be before 'project()' below
 set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/../cmake/arm-none-eabi.cmake)
-set(CMSIS_PATH ${CMAKE_SOURCE_DIR}/../lib/cmsis/CMSIS/)
+set(CMSIS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../lib/cmsis/CMSIS/)
 set(CMSIS_CORE_INCLUDE_PATH ${CMSIS_PATH}/Core/Include)
 
-set(NRFX_PATH ${CMAKE_SOURCE_DIR}/../lib/nrfx)
+set(NRFX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../lib/nrfx)
 set(MDK_PATH ${NRFX_PATH}/mdk)
 set(LD_SCRIPT_PATH ${MDK_PATH})
 
@@ -36,7 +42,7 @@ message(STATUS "CMAKE_TOOLCHAIN_FILE is: ${CMAKE_TOOLCHAIN_FILE}")
 set(SRC_FILES
         ${MDK_PATH}/gcc_startup_nrf52833.S
         ${MDK_PATH}/system_nrf52833.c
-        ${CMAKE_SOURCE_DIR}/main.c 
+        ${CMAKE_CURRENT_SOURCE_DIR}/main.c 
         ${NRF_DRIVERS_FILES}
         )
 
@@ -55,9 +61,12 @@ target_compile_definitions(${EXECUTABLE} PRIVATE
 target_include_directories(${EXECUTABLE} PRIVATE
         ${NRFX_PATH}
         ${MDK_PATH}
+        ${NRFX_DRIVERS_PATH}
         ${NRFX_DRIVERS_INCLUDE_PATH}
         ${CMSIS_CORE_INCLUDE_PATH}
-        ${CMAKE_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ./nrf_config
+        ./log
         )
 
 # Compiler options
@@ -66,6 +75,7 @@ target_compile_options(${EXECUTABLE} PRIVATE
         -mthumb
         -mfpu=fpv4-sp-d16
         -mfloat-abi=hard
+        #-mapcs-frame
 
         -fdata-sections
         -ffunction-sections
@@ -73,6 +83,7 @@ target_compile_options(${EXECUTABLE} PRIVATE
         -Wall
         -O0
         -g3
+        -std=gnu11
         )
 
 # Linker options
@@ -105,3 +116,25 @@ add_custom_command(TARGET ${EXECUTABLE}
         COMMAND ${CMAKE_OBJCOPY} -O srec --srec-len=64 ${EXECUTABLE} ${PROJECT_NAME}.s19
         COMMAND ${CMAKE_OBJCOPY} -O ihex ${EXECUTABLE} ${PROJECT_NAME}.hex
         COMMAND ${CMAKE_OBJCOPY} -O binary ${EXECUTABLE} ${PROJECT_NAME}.bin)
+
+define_property(GLOBAL PROPERTY LIBS_ALL BRIEF_DOCS "All submodule libraries must be added to this property.")
+set_property(GLOBAL PROPERTY LIBS_ALL "")
+
+add_subdirectory(drivers)
+add_subdirectory(sys)
+add_subdirectory(tools)
+
+get_property(LIBS_ALL_PROPERTY GLOBAL PROPERTY LIBS_ALL)
+
+message(STATUS "Libraries added to final executable:")
+foreach(lib ${LIBS_ALL_PROPERTY})
+        message(STATUS "\t${lib}")
+        target_link_libraries(${EXECUTABLE} PUBLIC ${lib})
+endforeach(lib $(LIBS_ALL_PROPERTY))
+
+# Build unit tests as a separate target
+option(UNIT_TESTS_BUILD "Build unit tests" OFF)
+
+if(UNIT_TESTS_BUILD)
+        add_subdirectory(tests)
+endif(UNIT_TESTS_BUILD)

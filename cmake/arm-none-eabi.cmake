@@ -1,10 +1,17 @@
+#
+# Copyright (c) 2023 Piotr Pryga
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
 # This is a generic cmake compiler file. The file is aimed for bare matal ARM GCC toolchain
 
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_PROCESSOR arm)
 
-# For bare-metal CMAKE doesn't have right linker script and dedicated flags, hecne complete compilation may fail.
-# With this flag CMAKE uses add_library() w type STATIC, that skips linking step.
+# CMake does a test of toolchain by build of dummy code. Bare-metal targeted toolchains doesn't have defailt linker
+# script and dedicated flags, hence toolchain test compilation may fail. With below variable set CMake uses
+# add_library() with type STATIC, thanks to that it skips linking step so it passes the build test.
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 set(TOOLCHAIN_PATH /usr/bin)
 
